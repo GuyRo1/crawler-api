@@ -3,7 +3,7 @@ import http from 'http'
 import { PubMessage } from '../models/pubSub'
 import { Server } from 'socket.io';
 
-import { DependenciesContainer } from '../dependencies/models/DependenciesContainer'
+import { DependenciesContainer } from '../dependencies/models/classes'
 import { QueueService } from '../models/rabbitmq';
 import { Subscriber } from './../dependencies/models/Subscriber';
 import {
@@ -39,10 +39,9 @@ const socketIoServer: SocketIo =
         io.on('connection', async (socket) => {
             console.log(`welcome: ${socket.id}`)
             socket.emit('ack')
-            const subFactory: SubscriberFactory = dependencies.get('Subscriber')
-            const subscriber = await subFactory()
+            const subscriber: Subscriber = await dependencies.get('Subscriber')
             socket.on('data', async data => {
-                const queueService: QueueService = dependencies.get('Queue')
+                const queueService: QueueService = await dependencies.get('Queue')
                 const task: QueueMessage = { id: socket.id, ...data };
                 queueService.send(task);
                 await subscriber.subscribe(socket.id, (message: string) => {

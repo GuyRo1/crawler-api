@@ -1,6 +1,5 @@
 
 import rabbitMQ, { Connection, Channel } from 'amqplib'
-import { SocketData } from '../../models/models'
 import { ConnectToQueue, CreateQueueService, GetChannel, SendTaskToQueue } from '../../models/rabbitmq'
 import { QueueMessage } from './../../models/models';
 

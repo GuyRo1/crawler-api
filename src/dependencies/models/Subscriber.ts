@@ -8,8 +8,6 @@ export class Subscriber {
 
     constructor(connection: Client) {
         this.connection = connection;
-        //this.subscribe = this.subscribe.bind(this)
-        // this.unSubscribe = this.unSubscribe.bind(this)
     }
 
     getChannel(){

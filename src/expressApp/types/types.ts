@@ -10,6 +10,7 @@ export type RouterContainer = {
 
 export interface DependencyContainer {
     name: string;
+    type: 'constructor' | 'factory' | 'service';
     dependency: any
 }
 

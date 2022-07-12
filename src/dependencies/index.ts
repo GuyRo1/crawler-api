@@ -1,6 +1,6 @@
 import { Dependencies, DependencyContainer } from "../expressApp/types/types"
 import { createQueueService } from "./services/Queue";
-import { DependenciesContainer } from './models/DependenciesContainer';
+import { DependenciesContainer } from './models/classes'
 import { createSubscriber } from './services/pubSub';
 
 
@@ -11,15 +11,16 @@ type LoadDependencies = () => Promise<DependenciesContainer>
 export const loadDependencies: LoadDependencies = async () => {
     const dependencies: Dependencies = []
     try {
-        const rabbitMqService = await createQueueService()
         dependencies.push({
             name: 'Queue',
-            dependency: rabbitMqService
+            type: 'factory',
+            dependency: createQueueService
         })
-         dependencies.push({
-             name: 'Subscriber',
-             dependency: createSubscriber
-         })
+        dependencies.push({
+            name: 'Subscriber',
+            type: 'factory',
+            dependency: createSubscriber
+        })
         return new DependenciesContainer(dependencies)
     } catch (err) {
         throw err
