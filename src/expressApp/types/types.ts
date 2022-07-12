@@ -1,5 +1,6 @@
 import { Router } from "express";
-//import { Request as _Request, Response as _Response } from "express";
+
+
 
 export type RouterContainer = {
     name: string;
@@ -7,9 +8,14 @@ export type RouterContainer = {
     dependencies: string[];
 }
 
-export type DependencyContainer = {
+export interface DependencyContainer {
     name: string;
     dependency: any
+}
+
+
+export interface Dependencies extends Array<DependencyContainer> {
+    use?: (dep: string) => DependencyContainer | undefined
 }
 
 export type Error = {

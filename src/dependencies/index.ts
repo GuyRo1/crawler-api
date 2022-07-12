@@ -1,20 +1,33 @@
-import { DependencyContainer } from "../expressApp/types/types"
+import { Dependencies, DependencyContainer } from "../expressApp/types/types"
+import { createQueueService } from "./services/Queue";
+import { DependenciesContainer } from './models/DependenciesContainer';
+import { createSubscriber } from './services/pubSub';
 
 
 
-export const loadDependencies = async () => {
-    const dependencies: DependencyContainer[] = []
-    try {//async stuff to get dependencies
 
-        // dependencies.push({
-        //     name:dependencyName,
-        //     dependency:Dependency currently any
-        // })
+type LoadDependencies = () => Promise<DependenciesContainer>
 
-        return dependencies
+export const loadDependencies: LoadDependencies = async () => {
+    const dependencies: Dependencies = []
+    try {
+        const rabbitMqService = await createQueueService()
+        dependencies.push({
+            name: 'Queue',
+            dependency: rabbitMqService
+        })
+         dependencies.push({
+             name: 'Subscriber',
+             dependency: createSubscriber
+         })
+        return new DependenciesContainer(dependencies)
     } catch (err) {
         throw err
     }
 }
 
- 
+
+export const use = () => {
+
+}
+
