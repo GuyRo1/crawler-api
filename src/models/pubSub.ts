@@ -1,4 +1,8 @@
-export type PubMessage = {
-    id:string,
-    url:string
+export type NewUrlPubMessage = {
+    id: string,
+    urls: string[]
+}
+
+export type TaskFinishedMessage = {
+    id:string
 }

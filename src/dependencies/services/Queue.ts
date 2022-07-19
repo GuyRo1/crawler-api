@@ -17,13 +17,15 @@ const sendTaskToQueue: SendTaskToQueue = async (channel: Channel, task: QueueMes
     ))
 }
 
-export const createQueueService:CreateQueueService = async () => {
+export const createQueueService: CreateQueueService = async () => {
     const connection: Connection = await connectToQueue()
     const channel: Channel = await getQueueChannel(connection)
     return {
         connection: connection,
         channel: channel,
-        send: (task: QueueMessage) => { sendTaskToQueue(channel, task) }
+        send: (
+            (channel: Channel, task: QueueMessage) => { sendTaskToQueue(channel, task) }
+        ).bind(null, channel)
     }
 }
 

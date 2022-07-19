@@ -1,6 +1,7 @@
 export interface ServerToClientEvents {
-    url: (url: string) => void;
-    ack: () => void
+    url: (url: string[]) => void;
+    ack: () => void;
+    finished: ()=>void;
 }
 
 export interface ClientToServerEvents {
@@ -18,6 +19,7 @@ export interface SocketData {
 }
 
 export interface QueueMessage {
+    serverId:string
     id:string,
     url: string;
     depth: number;

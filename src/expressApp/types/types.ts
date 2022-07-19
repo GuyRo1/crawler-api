@@ -8,9 +8,13 @@ export type RouterContainer = {
     dependencies: string[];
 }
 
+export type DependencyType = 'constructor' | 'factory' | 'service'
+
+
+
 export interface DependencyContainer {
     name: string;
-    type: 'constructor' | 'factory' | 'service';
+    type: DependencyType;
     dependency: any
 }
 
@@ -23,11 +27,3 @@ export type Error = {
     status: number,
     message: string
 }
-
-// export interface Request extends _Request {
-//     currentFullUrl: string;
-// }
-
-// export interface Response extends _Response {
-
-// } 
