@@ -1,12 +1,10 @@
-# Express typescript template
+# Crawler Api
 
-A starter express server project.
+Websockets api for establishing connection and live updating clients.
 
 Built with :
 
-* typescript
-* express
-* cors
-* nodemon
-* env
-* concurrently
+* Node
+* Socket.io
+* rabbitmq
+* redis
