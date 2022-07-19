@@ -19,10 +19,6 @@ type Options = { dependencies: DependenciesContainer }
 
 type SocketIo = (httpServer: http.Server, options: Options) => Server
 
-const isQueueService = (obj: any): obj is QueueService =>
-    (obj as QueueService).send !== undefined
-
-
 const socketIoServer: SocketIo =
     (httpServer: http.Server, { dependencies }: Options) => {
         const io = new Server
@@ -36,22 +32,30 @@ const socketIoServer: SocketIo =
                     methods: ['GET', 'POST']
                 }
             });
+
         io.on('connection', async (socket) => {
             console.log(`welcome: ${socket.id}`)
             socket.emit('ack')
-            const subscriber: Subscriber = await dependencies.get('Subscriber')
+            const globalSubscriber: Subscriber = await dependencies.get('Subscriber')
+            const socketSubscriber: Subscriber = await dependencies.get('Subscriber')
+            globalSubscriber.subscribe('main', (message: string) => {
+                const messageObj: PubMessage = JSON.parse(message)
+                console.log(`emitting url ${messageObj.url}`);
+                io.to(messageObj.id).emit('url', messageObj.url);
+            })
+            
             socket.on('data', async data => {
                 const queueService: QueueService = await dependencies.get('Queue')
                 const task: QueueMessage = { id: socket.id, ...data };
                 queueService.send(task);
-                await subscriber.subscribe(socket.id, (message: string) => {
+                await socketSubscriber.subscribe(socket.id, (message: string) => {
                     const messageObj: PubMessage = JSON.parse(message)
                     console.log(`emitting url ${messageObj.url}`);
                     io.to(messageObj.id).emit('url', messageObj.url);
                 });
             })
             socket.on('disconnecting', async (reason) => {
-                await subscriber.unSubscribe()
+                await socketSubscriber.unSubscribe()
             })
         });
 
